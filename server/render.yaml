@@ -1,0 +1,42 @@
+# הגדרות פריסה ל-Render (Blueprint).
+# מסד הנתונים נמצא אצל ספק נפרד (למשל Neon), וכתובתו מוזנת ב-DATABASE_URL.
+services:
+  - type: web
+    name: lesson-diary-api
+    runtime: node
+    plan: free
+    # --include=dev: כי TypeScript ו-Prisma CLI נדרשים לבנייה ולהרצת migrations
+    buildCommand: npm install --include=dev && npm run build
+    # מריץ migrations, יוצר חשבון מורה אם צריך, ומפעיל את השרת
+    startCommand: npm run start:render
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN_SECONDS
+        value: "28800"
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: TIMEZONE
+        value: Asia/Jerusalem
+      - key: LESSON_DURATION_MINUTES
+        value: "45"
+      - key: CANCEL_LIMIT_HOURS
+        value: "24"
+      - key: BOOKING_WINDOW_DAYS
+        value: "28"
+      - key: SEED_TEACHER_USERNAME
+        sync: false
+      - key: SEED_TEACHER_PASSWORD
+        sync: false
+      - key: SEED_DEMO_DATA
+        value: "false"
+      - key: SEED_DEMO_PASSWORD
+        sync: false

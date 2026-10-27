@@ -1,0 +1,164 @@
+// מבנה מסד הנתונים של "יומן שיעורים"
+// כל שינוי כאן מחייב migration חדש: npm run db:migrate
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// תפקיד המשתמש: מורה או חשבון של תלמיד (ההורה משתמש בו)
+enum Role {
+  TEACHER
+  STUDENT
+}
+
+/// רמת קריאה נוכחית של תלמיד
+enum ReadingLevel {
+  BEGINNER // מתחיל
+  BASIC // בסיסי
+  ADVANCED // מתקדם
+  FLUENT // שוטף
+}
+
+/// סטטוס שיעור
+enum LessonStatus {
+  PENDING // ממתין לאישור המורה
+  APPROVED // מאושר
+  REJECTED // נדחה ע"י המורה
+  CANCELLED // בוטל
+  COMPLETED // התקיים
+  NO_SHOW // התלמיד לא הגיע
+}
+
+/// האם התלמיד הגיע לשיעור (בדוח השיעור)
+enum Attendance {
+  ATTENDED
+  NO_SHOW
+}
+
+/// התנהגות בשיעור
+enum Behavior {
+  EXCELLENT // מצוינת
+  GOOD // טובה
+  AVERAGE // בינונית
+  DIFFICULT // קשה
+}
+
+/// האם התלמיד הכין את שיעורי הבית הקודמים
+enum HomeworkStatus {
+  DONE // כן
+  PARTIAL // חלקית
+  NOT_DONE // לא
+  NONE_GIVEN // לא ניתנו שיעורי בית
+}
+
+/// חשבונות כניסה: מורה אחת וחשבון לכל תלמיד
+model User {
+  id           Int      @id @default(autoincrement())
+  role         Role
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  student          Student?
+  requestedLessons Lesson[] @relation("LessonRequestedBy")
+  cancelledLessons Lesson[] @relation("LessonCancelledBy")
+}
+
+/// תלמיד. לכל תלמיד יש חשבון כניסה אחד (User)
+model Student {
+  id                 Int          @id @default(autoincrement())
+  userId             Int          @unique
+  firstName          String
+  lastName           String
+  age                Int
+  gradeText          String?
+  readingLevel       ReadingLevel @default(BEGINNER)
+  goals              String?
+  schoolTeacherName  String?
+  schoolTeacherPhone String?
+  parentName         String
+  parentPhone        String
+  teacherNotes       String?
+  isActive           Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  lessons      Lesson[]
+  specialSlots SpecialSlot[]
+}
+
+/// שעות עבודה שבועיות קבועות של המורה (שעון ישראל)
+model WorkingHours {
+  id        Int      @id @default(autoincrement())
+  dayOfWeek Int // 0 = ראשון ... 6 = שבת
+  startTime String // "HH:mm"
+  endTime   String // "HH:mm"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([dayOfWeek])
+}
+
+/// זמן פנוי מיוחד בתאריך מסוים. studentId ריק = פתוח לכל התלמידים
+model SpecialSlot {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @db.Date
+  startTime String // "HH:mm"
+  endTime   String // "HH:mm"
+  studentId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Student? @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([date])
+}
+
+/// שיעור (או בקשה לשיעור)
+model Lesson {
+  id            Int          @id @default(autoincrement())
+  studentId     Int
+  requestedById Int
+  startsAt      DateTime
+  endsAt        DateTime
+  status        LessonStatus @default(PENDING)
+  parentNote    String?
+  statusReason  String?
+  cancelledById Int?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  student     Student       @relation(fields: [studentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  requestedBy User          @relation("LessonRequestedBy", fields: [requestedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  cancelledBy User?         @relation("LessonCancelledBy", fields: [cancelledById], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  report      LessonReport?
+
+  @@index([startsAt])
+  @@index([studentId, startsAt])
+}
+
+/// דוח שיעור - לכל שיעור דוח אחד לכל היותר
+model LessonReport {
+  id                     Int             @id @default(autoincrement())
+  lessonId               Int             @unique
+  attendance             Attendance
+  topicsCovered          String?
+  behavior               Behavior?
+  behaviorNote           String?
+  previousHomework       HomeworkStatus?
+  homeworkAssigned       String?
+  nextLessonPlan         String?
+  extraLessonRecommended Boolean         @default(false)
+  extraLessonNote        String?
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}

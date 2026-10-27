@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="16" fill="#EEF3EB"/>
+  <path d="M32 22 C26 18 18 18 12 20 V46 C18 44 26 44 32 48 Z M32 22 C38 18 46 18 52 20 V46 C46 44 38 44 32 48 Z" fill="#fff" stroke="#3E6B52" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M17 28 H26 M17 33 H26 M17 38 H24" stroke="#C9D6C3" stroke-width="2" stroke-linecap="round"/>
+  <text x="42" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="15" fill="#3E6B52">א</text>
+</svg>

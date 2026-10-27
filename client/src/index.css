@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Suez+One&family=Assistant:wght@400;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Assistant", sans-serif;
+  --font-heading: "Suez One", serif;
+
+  --color-sage-50: #F6F8F4;
+  --color-sage-100: #EEF3EB;
+  --color-sage-200: #DDE8D8;
+  --color-sage-300: #C9D6C3;
+  --color-sage-500: #5E6B63;
+  --color-sage-600: #3E6B52;
+  --color-sage-700: #33594A;
+  --color-sage-900: #24302A;
+}
+
+body {
+  background-color: var(--color-sage-50);
+  color: var(--color-sage-900);
+}

@@ -1,0 +1,21 @@
+# תלויות
+node_modules/
+
+# קוד מקומפל
+dist/
+
+# סודות - לעולם לא להעלות!
+.env
+.env.*
+!.env.example
+!.env.test.example
+
+# לוגים וקבצים זמניים
+*.log
+npm-debug.log*
+coverage/
+.DS_Store
+Thumbs.db
+*.tmp
+.vscode/
+.idea/
