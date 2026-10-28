@@ -1,32 +1,56 @@
-# React + TypeScript + Vite
+# 📖 יומן שיעורים — צד לקוח (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+מערכת למורה לקריאה בשיעורים פרטיים: ההורה מבקש שיעור, המורה מאשרת, דוחה או מבטלת, ושני הצדדים רואים את השיעורים במקום אחד.
 
-Currently, two official plugins are available:
+## 🔗 קישורים
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| | כתובת |
+|---|---|
+| האתר | https://digitaldiary-1.onrender.com |
+| השרת (API) | https://digitaldiary-4x52.onrender.com/api |
+| תיעוד API (Swagger) | https://digitaldiary-4x52.onrender.com/api-docs |
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 👤 משתמשי הדגמה
 
-## Expanding the Oxlint configuration
+| תפקיד | שם משתמש | סיסמה |
+|---|---|---|
+| מורה (מנהלת) | `teacher` | `Teacher123!` |
+| הורה | `cohen.dani` | `Student123!` |
+| הורה | `levi.noa` | `Student123!` |
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## ✨ מה אפשר לעשות
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+**מורה**
+- רשימת שיעורים עם סינון לפי סטטוס וטווח תאריכים.
+- אישור, דחייה וביטול של שיעורים.
+- רשימת תלמידים עם חיפוש לפי שם ומיון (שם, גיל, רמת קריאה).
+- הוספת תלמיד חדש ואיפוס סיסמה לתלמיד.
+
+**הורה**
+- שיעורים קרובים ושיעורים שהיו, וביטול שיעור.
+- קביעת שיעור מתוך שבוע של זמנים פנויים (עד 4 שבועות קדימה).
+- צפייה בפרטי התלמיד ועריכת כיתה, פרטי המורה בבית הספר וטלפון.
+
+המורה רואה את כל התלמידים והשיעורים. ההורה רואה רק את שלו.
+
+## 🛠️ טכנולוגיות
+
+React + TypeScript (Vite) · React Router · React Hook Form + Yup · TanStack React Query · Context (משתמש מחובר) · Tailwind CSS
+
+## 📁 מבנה
+
+```
+src/
+├─ api/         קריאות לשרת (fetch עם פונקציה מרכזית)
+├─ types/       טיפוסי TypeScript
+├─ helpers/     פונקציות עזר לתאריכים
+├─ context/     AuthContext — המשתמש המחובר
+├─ routes/      ניתוב והגנה לפי תפקיד
+├─ components/  Layout, LessonItem, InlineForm, StudentEditForm ועוד
+└─ pages/       המסכים
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+   ```
+
+
