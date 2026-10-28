@@ -1,4 +1,3 @@
-import { number, string } from "yup"
 import type { Role } from "./auth";
 
 export type LessonStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | 'COMPLETED' | 'NO_SHOW'
@@ -11,11 +10,8 @@ export const statusLabels: Record<LessonStatus, string> = {
   COMPLETED: 'התקיים',
   NO_SHOW: 'לא הגיע',
 }
-const LessonStudent={
-    id:number,
-    firstName:string,
-    lastName:string
-}
+
+
 export type LessonStudent = {
   id: number;
   firstName: string;
